@@ -125,7 +125,8 @@ export interface TreeNode {
 
 # Examples
 
-## Add a folder or item icon via `title` slot
+## Customize title, toggle icon and file icon with slots.
+Note: In this example, we use Font Awesome as icon lib.
 
 ````html
   <file-tree :data="treeData" @nodeSelect="onNodeSelect" @fileCreate="onFileCreate"
