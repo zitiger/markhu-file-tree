@@ -7,7 +7,7 @@
     <!--    </div>-->
     <div class="child child1">
       <div class="title">Simple Tree</div>
-      <file-tree :data="treeData" @nodeSelect="onNodeSelect" @fileCreate="onFileCreate"
+      <file-tree :data="treeData1" @nodeSelect="onNodeSelect" @fileCreate="onFileCreate"
                  @folderCreate="onFolderCreate" @nodeRename="onNodeRename"
                  @nodeExpand="onNodeExpand" @nodeCollapse="onNodeCollapse"
                  @nodeDrop="onNodeDrop" @nodeMove="onNodeMove" @nodeContextmenu="onNodeContextmenu"
@@ -18,7 +18,7 @@
     </div>
     <div class="child child1">
       <div class="title">Customizable Tree</div>
-      <file-tree :data="treeData" @nodeSelect="onNodeSelect" @fileCreate="onFileCreate"
+      <file-tree :data="treeData2" @nodeSelect="onNodeSelect" @fileCreate="onFileCreate"
                  @folderCreate="onFolderCreate" @nodeRename="onNodeRename"
                  @nodeExpand="onNodeExpand" @nodeCollapse="onNodeCollapse"
                  @nodeDrop="onNodeDrop" @nodeMove="onNodeMove" @nodeContextmenu="onNodeContextmenu"
@@ -129,92 +129,95 @@ async function onFileCreate(node: TreeNode, title: string) {
   addLog("create file", node.title + " -> " + title);
 }
 
-// 引用该类型并使用
-const treeData = reactive([
+
+
+const data = [
+  {
+    title: "Documents",
+    path: "/users/Jim/Documents",
+    type: "folder",
+    children: [
       {
-        title: "Documents",
-        path: "/users/Jim/Documents",
-        type: "folder",
-        children: [
-          {
-            title: "File1.txt",
-            path: "/users/Jim/Documents/File1.txt",
-            type: "file",
-          },
-          {
-            title: "File2.pdf",
-            path: "/users/Jim/Documents/File2.pdf",
-            type: "file"
-          }, {
-            title: "File3.doc",
-            path: "/users/Jim/Documents/File3.doc",
-            type: "file",
-          },
-          {
-            title: "File4.csv",
-            path: "/users/Jim/Documents/File4.csv",
-            type: "file",
-          },
-          {
-            title: "File5.xxx",
-            path: "/users/Jim/Documents/File5.xxx",
-            type: "file",
-          }
-        ]
+        title: "File1.txt",
+        path: "/users/Jim/Documents/File1.txt",
+        type: "file",
       },
       {
-        title: "Pictures",
-        path: "/users/Jim/Pictures",
-        type: "folder",
-        children: [
-          {
-            title: "Image1.jpg",
-            path: "/users/Jim/Pictures/Image1.jpg",
-            type: "file"
-          },
-          {
-            title: "Image2.jpg",
-            path: "/users/Jim/Pictures/Image2.jpg",
-            type: "file"
-          }
-        ]
+        title: "File2.pdf",
+        path: "/users/Jim/Documents/File2.pdf",
+        type: "file"
+      }, {
+        title: "File3.doc",
+        path: "/users/Jim/Documents/File3.doc",
+        type: "file",
       },
       {
-        title: "Music",
-        path: "/users/Jim/Music",
+        title: "File4.csv",
+        path: "/users/Jim/Documents/File4.csv",
+        type: "file",
+      },
+      {
+        title: "File5.xxx",
+        path: "/users/Jim/Documents/File5.xxx",
+        type: "file",
+      }
+    ]
+  },
+  {
+    title: "Pictures",
+    path: "/users/Jim/Pictures",
+    type: "folder",
+    children: [
+      {
+        title: "Image1.jpg",
+        path: "/users/Jim/Pictures/Image1.jpg",
+        type: "file"
+      },
+      {
+        title: "Image2.jpg",
+        path: "/users/Jim/Pictures/Image2.jpg",
+        type: "file"
+      }
+    ]
+  },
+  {
+    title: "Music",
+    path: "/users/Jim/Music",
+    type: "folder",
+    children: [
+      {
+        title: "File1.mp3",
+        path: "/users/Jim/Music/File1.mp3",
+        type: "file"
+      },
+      {
+        title: "File2.mp3",
+        path: "/users/Jim/Music/File2.mp3",
+        type: "file"
+      },
+      {
+        title: "Level 1",
+        path: "/users/Jim/Music/Level1",
         type: "folder",
         children: [
           {
-            title: "File1.mp3",
-            path: "/users/Jim/Music/File1.mp3",
+            title: "File3.mp3",
+            path: "/users/Jim/Music/Level1/File3.mp3",
             type: "file"
           },
           {
-            title: "File2.mp3",
-            path: "/users/Jim/Music/File2.mp3",
+            title: "File4.mp3",
+            path: "/users/Jim/Music/Level1/File4.mp3",
             type: "file"
-          },
-          {
-            title: "Level 1",
-            path: "/users/Jim/Music/Level1",
-            type: "folder",
-            children: [
-              {
-                title: "File3.mp3",
-                path: "/users/Jim/Music/Level1/File3.mp3",
-                type: "file"
-              },
-              {
-                title: "File4.mp3",
-                path: "/users/Jim/Music/Level1/File4.mp3",
-                type: "file"
-              }
-            ]
           }
         ]
       }
     ]
-);
+  }
+]
+
+const treeData1 = reactive( JSON.parse( JSON.stringify(data)));
+const treeData2 = reactive( JSON.parse( JSON.stringify(data)));
 
 </script>
 <style>
