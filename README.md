@@ -117,14 +117,11 @@ export interface TreeNode {
 
 # Slots
 
-| Slot Name | Slot Purpose |
-|---------------------|-------------------------------------------------------|
-| expandedIcon | Displayed when the folder node is expanded. |
-| collapsedIcon | Displayed when the folder node is collapsed. |
-| folderIcon | Displayed when the node is a folder. | 
-| fileIcon | Displayed when the node is a file. |
-| editingInput | Displayed when the node is being edited. | 
-| title | Displayed when the node is not being edited. |
+| Slot Name | Parameters | Purpose |
+| --------- | -------------- | ----------------------------------------------------------- | 
+| title | {nodeData} | Used to customize the title content of a node. |
+| toggler | {nodeData} | Used to customize the expand/collapse icon of a node. |
+| icon | {nodeData} | Used to customize the icon of a node. |
 
 # Examples
 
