@@ -22,51 +22,45 @@ or
 ````html
 <script setup>
     import {reactive} from "vue";
-    import {FileTree} from "markhu-file-tree";
     import "markhu-file-tree/dist/style.css";
 
-    const treeData = reactive({
-        title: "/",
-        path: "/",
-        type: "folder",
-        children: [
-            {
-                title: "Documents",
-                path: "/users/Jim/Documents",
-                type: "folder",
-                children: [
-                    {
-                        title: "File1.txt",
-                        path: "/users/Jim/Documents/File1.txt",
-                        type: "file",
-                    },
-                    {
-                        title: "File2.txt",
-                        path: "/users/Jim/Documents/File2.txt",
-                        type: "file"
-                    }
-                ]
-            },
-            {
-                title: "Pictures",
-                path: "/users/Jim/Pictures",
-                type: "folder",
-                children: [
-                    {
-                        title: "Image1.jpg",
-                        path: "/users/Jim/Pictures/Image1.jpg",
-                        type: "file"
-                    },
-                    {
-                        title: "Image2.jpg",
-                        path: "/users/Jim/Pictures/Image2.jpg",
-                        type: "file"
-                    }
-                ]
-            },
-        ]
-    });
-
+    const treeData = reactive([
+                {
+                    title: "Documents",
+                    path: "/users/Jim/Documents",
+                    type: "folder",
+                    children: [
+                        {
+                            title: "File1.txt",
+                            path: "/users/Jim/Documents/File1.txt",
+                            type: "file",
+                        },
+                        {
+                            title: "File2.txt",
+                            path: "/users/Jim/Documents/File2.txt",
+                            type: "file"
+                        }
+                    ]
+                },
+                {
+                    title: "Pictures",
+                    path: "/users/Jim/Pictures",
+                    type: "folder",
+                    children: [
+                        {
+                            title: "Image1.jpg",
+                            path: "/users/Jim/Pictures/Image1.jpg",
+                            type: "file"
+                        },
+                        {
+                            title: "Image2.jpg",
+                            path: "/users/Jim/Pictures/Image2.jpg",
+                            type: "file"
+                        }
+                    ]
+                },
+            ]
+    );
 </script>
 
 <template>

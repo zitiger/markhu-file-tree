@@ -38,14 +38,19 @@ const emits = defineEmits(['nodeSelect', 'fileCreate', 'folderCreate', 'nodeRena
 const props = defineProps({
   // 数据源列表
   data: {
-    type: Object as () => TreeNode,
+    type: Array as () => TreeNode[],
     required: true
   }
 });
 
-const data = reactive(props.data)
+const data: TreeNode = reactive({
+  title: "/",
+  path: "/",
+  type: "folder",
+  expanded: true,
+  children: props.data
+})
 
-data.expanded = true;
 
 let selectedItems = [] as TreeNode[];
 let focusedNode: TreeNode | null = null;
