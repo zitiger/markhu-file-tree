@@ -2,6 +2,8 @@
 
 markhu-file-tree is a customizable draggable file tree component for Vue 3 that draws inspiration from the VSCode resource explorer.
 
+![Example](./example.gif)
+
 # Feature
 
 * All nodes in the tree have a type of either 'folder' or 'file'.
