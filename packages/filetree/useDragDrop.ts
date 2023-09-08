@@ -2,21 +2,14 @@ import {ref} from 'vue';
 import {Position} from "./types";
 import {dirname, findIndexByPath, findNodeByPath, findParentNodeByPath, join} from "./utils";
 
-
 export default function useDragDrop(emits) {
-
 
     const hoverAboveKey = ref<string>("");
     const hoverInKey = ref<string>("");
     const hoverBelowKey = ref<string>("");
 
-
     let drag: TreeNode = null;
-    // const dragOverClass = ref("")
     let position = Position.IN;
-    // let  drop:TreeNode =  null
-    // let  position:Position =  Position.IN
-
 
     function onDragStart(nodeData) {
         drag = nodeData;
@@ -42,16 +35,13 @@ export default function useDragDrop(emits) {
 
         clearHover();
         if (position === Position.ABOVE) {
-            // dragOverClass.value = "tree-drag-over-top";
             hoverAboveKey.value = nodeData.path;
         } else if (position === Position.BELOW) {
             // when a folder is expanded, there is no below position
             if (nodeData.type == "file" || !nodeData.expanded) {
-                //dragOverClass.value = "tree-drag-over-bottom";
                 hoverBelowKey.value = nodeData.path;
             }
         } else {
-            // dragOverClass.value = "tree-drag-over";
             hoverInKey.value = nodeData.path;
         }
     }
@@ -60,9 +50,7 @@ export default function useDragDrop(emits) {
         hoverAboveKey.value = "";
         hoverInKey.value = "";
         hoverBelowKey.value = "";
-
     }
-
 
     function calculateDropPosition(e: DragEvent, type: string): Position {
         const targetElement = e.target as HTMLElement;
@@ -102,26 +90,19 @@ export default function useDragDrop(emits) {
     }
 
     function onDragLeave(e: DragEvent) {
-        // dragOverClass.value = "";
         clearHover();
     }
 
     function onDragEnd(e: DragEvent) {
-        // dragOverClass.value = "";
         clearHover();
-
     }
 
     const onDrop = (drop: TreeNode, data) => {
-        // emits('nodeDrop');
-        // dragOverClass.value = "";
         clearHover();
 
         if (drop.path === drag.path) {
             return
         }
-
-        // let treeNodes  = flattenTree.value;
 
         const dragItem = findNodeByPath(data, drag.path)
         const dropItem = findNodeByPath(data, drop.path)
@@ -148,24 +129,16 @@ export default function useDragDrop(emits) {
                 }
             }
         }
-        // else {
-        //   console.log("ddd")
-        //   let index = data.findIndex(n => n.path === drag.path);
-        //   data.splice(index, 1)
-        // }
-
 
         const oldPath = dragItem?.path;
         const title = dragItem?.title
         let newPath;
 
         if (position === Position.IN) {
-            // if (dropItem.type === "folder") {
             if (!dropItem.children) {
                 dropItem.children = [];
             }
             dropItem.children.push(dragItem)
-
             newPath = join(dropItem.path, title);
         } else {
 
@@ -195,7 +168,6 @@ export default function useDragDrop(emits) {
         if (newPath !== oldPath) {
             emits("nodeMove", newPath, oldPath);
         }
-
     }
 
     return {
