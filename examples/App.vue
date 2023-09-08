@@ -1,5 +1,5 @@
 <template>
-
+  <button @click="add">Add</button>
   <div class="container">
     <!--    <div class="child child1">-->
     <!--      <div class="title">Tree Data</div>-->
@@ -11,6 +11,7 @@
                  @folderCreate="onFolderCreate" @nodeRename="onNodeRename"
                  @nodeExpand="onNodeExpand" @nodeCollapse="onNodeCollapse"
                  @nodeDrop="onNodeDrop" @nodeMove="onNodeMove" @nodeContextmenu="onNodeContextmenu"
+                 ref="treeRef"
       >
 
       </file-tree>
@@ -68,6 +69,12 @@ import ContextMenu from "../packages/ContextMenu/ContextMenu.vue";
 import type {TreeNode} from "../packages/filetree/types";
 import FileTree from "../packages/filetree/FileTree.vue";
 
+const treeRef = ref();
+
+function add() {
+  treeData1.children.length = 0;
+  treeData1.children.push(...data2)
+}
 
 const contextMenuRef = ref();
 const logs = reactive<string[]>([]);
@@ -101,18 +108,27 @@ function onMenuItemClick(node: TreeNode, menuId: string) {
 
   addLog("click menu", node.title + ", " + menuId)
   if (menuId === "editing") {
-    node.editing = true;
+    // node.editing = true;
+    treeRef.value.startRename(node.path)
+
   } else if (menuId === "addingFile") {
-    node.addingFile = true;
-    node.addingFolder = false;
+    treeRef.value.startCreateFile(node.path)
+
+    //
+    // node.addingFile = true;
+    // node.addingFolder = false;
   } else if (menuId === "addingFolder") {
-    node.addingFile = false;
-    node.addingFolder = true;
+    treeRef.value.startCreateFolder(node.path)
+
+    // node.addingFile = false;
+    // node.addingFolder = true;
   }
 }
 
-function onNodeSelect(items: TreeNode[]) {
-  addLog("select", items.map(n => n.title).join(", "))
+function onNodeSelect(items) {
+  for (const item of items) {
+    addLog("select", item)
+  }
 }
 
 function onNodeRename(node: TreeNode, newTitle: string, oldTitle: string) {
@@ -130,23 +146,118 @@ async function onFileCreate(node: TreeNode, title: string) {
 }
 
 
+const data = {
+  title: "root",
+  path: "/users/Jim/",
+  type: "folder",
+  children: [
+    {
+      title: "Documents",
+      path: "/users/Jim/Documents",
+      type: "folder",
+      children: [
+        {
+          title: "File1.txt",
+          path: "/users/Jim/Documents/File1.txt",
+          type: "file",
+        },
+        {
+          title: "File2.pdf",
+          path: "/users/Jim/Documents/File2.pdf",
+          type: "file"
+        }, {
+          title: "File3.doc",
+          path: "/users/Jim/Documents/File3.doc",
+          type: "file",
+        },
+        {
+          title: "File4.csv",
+          path: "/users/Jim/Documents/File4.csv",
+          type: "file",
+        },
+        {
+          title: "File5.xxx",
+          path: "/users/Jim/Documents/File5.xxx",
+          type: "file",
+        }
+      ]
+    },
+    {
+      title: "Pictures",
+      path: "/users/Jim/Pictures",
+      type: "folder",
+      children: [
+        {
+          title: "Image1.jpg",
+          path: "/users/Jim/Pictures/Image1.jpg",
+          type: "file"
+        },
+        {
+          title: "Image2.jpg",
+          path: "/users/Jim/Pictures/Image2.jpg",
+          type: "file"
+        }
+      ]
+    },
+    {
+      title: "Music",
+      path: "/users/Jim/Music",
+      type: "folder",
+      children: [
+        {
+          title: "File1.mp3",
+          path: "/users/Jim/Music/File1.mp3",
+          type: "file"
+        },
+        {
+          title: "File2.mp3",
+          path: "/users/Jim/Music/File2.mp3",
+          type: "file"
+        },
+        {
+          title: "Level 1",
+          path: "/users/Jim/Music/Level1",
+          type: "folder",
+          children: [
+            {
+              title: "File3.mp3",
+              path: "/users/Jim/Music/Level1/File3.mp3",
+              type: "file"
+            },
+            {
+              title: "File4.mp3",
+              path: "/users/Jim/Music/Level1/File4.mp3",
+              type: "file"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
 
-const data = [
+const data2 = [
   {
     title: "Documents",
     path: "/users/Jim/Documents",
     type: "folder",
     children: [
       {
-        title: "File1.txt",
-        path: "/users/Jim/Documents/File1.txt",
+        title: "Files",
+        path: "/users/Jim/Documents/Files",
+        type: "folder",
+      },
+      {
+        title: "File1.txt.new",
+        path: "/users/Jim/Documents/File1.txt.new",
         type: "file",
       },
       {
         title: "File2.pdf",
         path: "/users/Jim/Documents/File2.pdf",
         type: "file"
-      }, {
+      },
+      {
         title: "File3.doc",
         path: "/users/Jim/Documents/File3.doc",
         type: "file",
@@ -215,9 +326,8 @@ const data = [
     ]
   }
 ]
-
-const treeData1 = reactive( JSON.parse( JSON.stringify(data)));
-const treeData2 = reactive( JSON.parse( JSON.stringify(data)));
+const treeData1 = reactive(JSON.parse(JSON.stringify(data)));
+const treeData2 = reactive(JSON.parse(JSON.stringify(data)));
 
 </script>
 <style>

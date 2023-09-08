@@ -1,6 +1,6 @@
 {
   "name": "markhu-file-tree2",
-  "version": "0.1.12",
+  "version": "0.1.14",
   "main": "dist/markhu-file-tree.umd.js",
   "module": "dist/markhu-file-tree.es.js",
   "keywords": [
