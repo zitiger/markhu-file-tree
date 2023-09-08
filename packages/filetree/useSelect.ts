@@ -5,11 +5,8 @@ import {reactive} from "vue";
 export default function useSelect(flattenTree, focusedNodeKey, emits) {
 
     const selectedKeys = reactive(new Set<string>())
-
-    // const selectedNodes = reactive<TreeNode[]>([]);
     const clickedKeys  = [];
     const focusedKey = focusedNodeKey;
-
 
     function onFocusIn() {
         window.addEventListener('keydown', onKeyDown);
@@ -27,29 +24,17 @@ export default function useSelect(flattenTree, focusedNodeKey, emits) {
         }
     }
 
-
     function onNodeSelect(event: MouseEvent, item: TreeNode) {
         const {path} = item
         focusedKey.value = '';
 
         console.log("onNodeSelect")
 
-
-        // Check if the user is holding Ctrl or Cmd key
+        // Check if the user is holding Ctrl/Cmd or Shift key
         const isCtrlOrCmdSelect = event.ctrlKey || event.metaKey;
         const isShiftSelect = event.shiftKey;
 
         if (isCtrlOrCmdSelect) {
-            // If the user is holding Ctrl or Cmd key
-            // const findIndex = selectedNodes.findIndex(item => path === item.path)
-            // if (findIndex > -1) {
-            //     selectedNodes.splice(findIndex, 1)
-            //     item.selected = false;
-            //
-            // } else {
-            //     selectedNodes.push(item)
-            //     item.selected = true;
-            // }
             if(selectedKeys.has(path)){
                 selectedKeys.delete(path);
                 const index = clickedKeys.indexOf(path);
@@ -59,8 +44,7 @@ export default function useSelect(flattenTree, focusedNodeKey, emits) {
                 clickedKeys.push(path);
             }
         } else if (isShiftSelect) {
-
-            const visibleItems = flattenTree.value//flattenVisibleTree(data);
+            const visibleItems = flattenTree.value;
             let lastClickedIndex;
             const lastClickedPath = clickedKeys[clickedKeys.length-1]
             if (lastClickedPath) {
@@ -78,16 +62,7 @@ export default function useSelect(flattenTree, focusedNodeKey, emits) {
                 const path = n.path;
                 selectedKeys.add(path)
             })
-
-            // newSelected.forEach(s => s.selected = true)
-
         } else {
-            // for (const node of selectedNodes) {
-            //     node.selected = false;
-            // }
-            // selectedNodes.splice(0, selectedNodes.length)
-            // selectedNodes.push(item);
-            // item.selected = true;
             selectedKeys.clear();
             selectedKeys.add(item.path)
             clickedKeys.push(item.path)
@@ -96,9 +71,8 @@ export default function useSelect(flattenTree, focusedNodeKey, emits) {
         emits('nodeSelect', selectedKeys);
     }
 
-
     function onSelectionMoved(direction: number, isShift: boolean) {
-        if (selectedKeys.length === 0) {
+        if (selectedKeys.size === 0) {
             return
         }
         console.log("onSelectionMoved")
@@ -117,7 +91,6 @@ export default function useSelect(flattenTree, focusedNodeKey, emits) {
             selectedKeys.clear();
         }
         const newSelectedItem = visibleItems[newIndex].path;
-        // newSelectedItem.selected = true;
         selectedKeys.add(newSelectedItem);
         clickedKeys.push(newSelectedItem)
     }

@@ -18,7 +18,7 @@
         <span v-if="nodeData.type === 'folder'" @click.stop="onNodeToggle(nodeData)" class="icon" @dragover.prevent>
           <slot name="toggler" :nodeData="nodeData">
             <template
-                v-if="expandedKeys.has( nodeData.path) ||nodeData.path === createFileKey ||  nodeData.path === createFolderKey">-</template>
+                v-if="expandedKeys.has(nodeData.path) || nodeData.path === createFileKey ||  nodeData.path === createFolderKey">-</template>
             <template v-else>+</template>
           </slot>
         </span>
@@ -85,7 +85,6 @@ const emits = defineEmits(
       'folderCreate', 'nodeRename', "nodeContextmenu", "nodeExpand", "nodeCollapse"]);
 
 const editInputRef = ref();
-
 const focusedKey = ref<string>('');
 const expandedKeys = reactive(new Set<string>());
 
@@ -105,8 +104,6 @@ const flattenTree = computed(() => {
 
   traverse(data)
 
-  console.log("data", data)
-  console.log("flatten", result)
   return result
 })
 const {selectedKeys, onFocusIn, onFocusOut, onNodeSelect} = useSelect(flattenTree, focusedKey, emits);

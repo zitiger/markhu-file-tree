@@ -90,7 +90,7 @@ export default function useEdit(expandedKeys: Set<string>, editInputRef, emits) 
     }
 
     function doCreate(node: TreeNode, title: string, type: string) {
-        const newPath = join(node.path, +title)
+        const newPath = join(node.path, title)
         if (node.children) {
             for (const child of node.children) {
                 if (child.path === newPath) {

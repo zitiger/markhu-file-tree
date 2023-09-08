@@ -1,38 +1,5 @@
 import type {TreeNode} from "./types";
 
-export function flattenVisibleTree(tree: TreeNode): TreeNode[] {
-    const result: TreeNode[] = [];
-
-    //
-    function traverse(node: TreeNode, parentExpanded = false) {
-        if (parentExpanded || node.expanded) {
-            result.push(node);
-
-            if ((node.path === "/" || node.type === 'folder') && node.expanded && node.children) {
-                for (const child of node.children) {
-                    traverse(child, node.expanded);
-                }
-            }
-        }
-    }
-
-    traverse(tree);
-
-    return result;
-}
-
-
-export function traverse(node: TreeNode, fun: Function) {
-    fun(node);
-
-    if (node.children) {
-        for (const child of node.children) {
-            traverse(child, fun);
-        }
-    }
-}
-
-
 export function findNodeByPath(node: TreeNode, targetPath: string): TreeNode | null {
 
     if (node.path === targetPath) {
@@ -81,7 +48,6 @@ export function findIndexByPath(data: TreeNode[], path: string): number {
     }
     return 0;
 }
-
 
 export function sep(paths: string | string[]): string {
     if (Array.isArray(paths)) {
