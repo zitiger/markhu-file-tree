@@ -5,7 +5,7 @@
          @contextmenu.stop.prevent="onNodeContextmenu($event, nodeData)"
          :class="[{selected: selectedKeys.has(nodeData.path), focused: focusedKey === nodeData.path}]"
     >
-      <div v-show="nodeData.path!=='/'" style="display: flex" :style="{'margin-left': (nodeData.level)*20+'px' }"
+      <div v-if="nodeData.path !== data.path" style="display: flex" :style="{'margin-left': (nodeData.level)*20+'px' }"
            class="file-tree-node-content"
            :class="[{
              'node-drag-hover-above': hoverAboveKey===nodeData.path,
@@ -16,9 +16,8 @@
            @dragleave.stop="onDragLeave"
            @drop.stop="onDrop(nodeData,data)" @click="onNodeSelect($event, nodeData)">
         <span v-if="nodeData.type === 'folder'" @click.stop="onNodeToggle(nodeData)" class="icon" @dragover.prevent>
-          <slot name="toggler" :nodeData="nodeData">
-            <template
-                v-if="expandedKeys.has(nodeData.path) || nodeData.path === createFileKey ||  nodeData.path === createFolderKey">-</template>
+          <slot name="toggler" :nodeData="nodeData" :expanded="expandedKeys.has(nodeData.path)">
+            <template v-if="expandedKeys.has(nodeData.path)">-</template>
             <template v-else>+</template>
           </slot>
         </span>
@@ -35,6 +34,8 @@
                  v-on:keyup.esc="onEditCancel"
                  ref="editInputRef"
                  :value="nodeData.title"
+                 class="tree-node-input"
+                 :class="[{ 'node-edit-error': editErrorKey===nodeData.path, }]"
           >
         </template>
         <slot name="title" :nodeData="nodeData" v-else>
@@ -48,6 +49,8 @@
                  @blur="onFolderCreate(nodeData)"
                  v-on:keydown.enter="onFolderCreate(nodeData)"
                  v-on:keyup.esc="onEditCancel"
+                 class="tree-node-input"
+                 :class="[{ 'node-edit-error': editErrorKey===nodeData.path, }]"
           >
         </template>
 
@@ -55,7 +58,10 @@
           <input style="width: 100%" type="text" ref="editInputRef"
                  @blur="onFileCreate(nodeData)"
                  v-on:keydown.enter="onFileCreate(nodeData)"
-                 v-on:keyup.esc="onEditCancel">
+                 v-on:keyup.esc="onEditCancel"
+                 class="tree-node-input"
+                 :class="[{ 'node-edit-error': editErrorKey===nodeData.path, }]"
+          >
         </template>
       </div>
     </div>
@@ -70,19 +76,22 @@ import useSelect from "./useSelect";
 import useEdit from "./useEdit";
 
 const props = defineProps({
-  // 数据源列表
   data: {
     type: Object as () => TreeNode,
     required: true
-  }
+  },
+  defaultExtname: {
+    type: String,
+    required: false
+  },
 });
 
 const data = reactive(props.data)
 const emits = defineEmits(
-    ['nodeSelect', 'fileCreate', 'folderCreate', 'nodeRename',
+    ['nodeClick', 'nodeSelect', 'fileCreate', 'folderCreate', 'nodeRename', 'editError',
       'nodeContextmenu', 'nodeExpand', 'nodeCollapse', 'nodeDrop',
-      'nodeMove', 'nodeDrop', 'nodeSelect', 'fileCreate',
-      'folderCreate', 'nodeRename', "nodeContextmenu", "nodeExpand", "nodeCollapse"]);
+      'nodeMove', 'nodeDrop', 'nodeSelect', "nodeContextmenu",
+      "nodeExpand", "nodeCollapse"]);
 
 const editInputRef = ref();
 const focusedKey = ref<string>('');
@@ -90,6 +99,8 @@ const expandedKeys = reactive(new Set<string>());
 
 const flattenTree = computed(() => {
   let result: TreeNode[] = [];
+
+  result.push(data)
 
   function traverse(tree: TreeNode, level = 0) {
     for (const node of tree.children) {
@@ -118,10 +129,12 @@ const {
   onDragEnd,
   onDrop
 } = useDragDrop(emits);
+
 const {
   renameKey,
   createFolderKey,
   createFileKey,
+  editErrorKey,
   startRename,
   startCreateFolder,
   startCreateFile,
@@ -129,7 +142,7 @@ const {
   onNodeRename,
   onFileCreate,
   onFolderCreate
-} = useEdit(expandedKeys, editInputRef, emits);
+} = useEdit(props.defaultExtname, expandedKeys, editInputRef, emits);
 
 
 defineExpose({startRename, startCreateFolder, startCreateFile})
@@ -153,41 +166,44 @@ function onNodeToggle(nodeData) {
 </script>
 <style>
 
-.file-tree-view ul {
-  margin-left: 0;
-  padding-left: 0;
+.file-tree-view {
+  width: 100%;
 }
 
 .file-tree-node {
-  border: 1px solid transparent;
+  border: 2px solid transparent;
 }
 
 .file-tree-node.selected {
   background-color: #5295E7;
-  border: 1px solid #5295E7;
+  border: 2px solid #5295E7;
 
 }
 
 .file-tree-node.focused {
-  border: 1px solid #5295E7;
+  border: 2px solid #5295E7;
 }
 
 .file-tree-node-content {
-  border: 1px solid transparent;
+  border: 2px solid transparent;
 }
 
 .node-drag-hover-in {
   background-color: #5295E7;
   color: white;
-  border: 1px solid #5295E7;
+  border: 2px solid #5295E7;
 }
 
 .node-drag-hover-above {
-  border-top: 1px solid #5295E7 !important;
+  border-top: 2px solid #5295E7 !important;
 }
 
 .node-drag-hover-below {
-  border-bottom: 1px solid #5295E7 !important;
+  border-bottom: 2px solid #5295E7 !important;
+}
+
+.node-edit-error {
+  border-color: red !important;
 }
 </style>
 

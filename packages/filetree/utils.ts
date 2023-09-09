@@ -141,4 +141,27 @@ export function dirname(path: string): string {
     return parts.slice(0, -1).join(separator);
 }
 
-
+/**
+ * Gets the extension name of a file path.
+ * @param {string} path - The file path.
+ * @returns {string} The extension name of the file path.
+ *
+ * @example
+ * // Example usage:
+ * const path1 = '/path/to/file.txt';
+ * const extName1 = extname(path1);
+ * // extName1: ".txt"
+ *
+ * const path2 = 'C:\\path\\to\\file.txt';
+ * const extName2 = extname(path2);
+ * // extName2: ".txt"
+ */
+export function extname(path: string): string {
+    const separator = sep(path);
+    const baseName = basename(path);
+    const parts = baseName.split('.');
+    if (parts.length > 1) {
+        return parts[parts.length - 1];
+    }
+    return '';
+}

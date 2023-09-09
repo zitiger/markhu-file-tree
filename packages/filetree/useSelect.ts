@@ -2,10 +2,10 @@ import {TreeNode} from "./types";
 import {findIndexByPath} from "./utils";
 import {reactive} from "vue";
 
-export default function useSelect(flattenTree, focusedNodeKey, emits) {
+export default function useSelect(flattenTree: TreeNode[], focusedNodeKey, emits) {
 
     const selectedKeys = reactive(new Set<string>())
-    const clickedKeys  = [];
+    const clickedKeys: string[] = [];
     const focusedKey = focusedNodeKey;
 
     function onFocusIn() {
@@ -35,18 +35,18 @@ export default function useSelect(flattenTree, focusedNodeKey, emits) {
         const isShiftSelect = event.shiftKey;
 
         if (isCtrlOrCmdSelect) {
-            if(selectedKeys.has(path)){
+            if (selectedKeys.has(path)) {
                 selectedKeys.delete(path);
                 const index = clickedKeys.indexOf(path);
-                clickedKeys.splice(index,1);
-            }else {
+                clickedKeys.splice(index, 1);
+            } else {
                 selectedKeys.add(path);
                 clickedKeys.push(path);
             }
         } else if (isShiftSelect) {
             const visibleItems = flattenTree.value;
             let lastClickedIndex;
-            const lastClickedPath = clickedKeys[clickedKeys.length-1]
+            const lastClickedPath = clickedKeys[clickedKeys.length - 1]
             if (lastClickedPath) {
                 lastClickedIndex = visibleItems.findIndex(i => i.path === lastClickedPath);
             } else {
@@ -58,7 +58,7 @@ export default function useSelect(flattenTree, focusedNodeKey, emits) {
             const maxIndex = Math.max(lastClickedIndex, currentIndex);
 
             const newSelected = visibleItems.slice(minIndex, maxIndex + 1);
-            newSelected.forEach(n=>{
+            newSelected.forEach(n => {
                 const path = n.path;
                 selectedKeys.add(path)
             })
@@ -66,6 +66,8 @@ export default function useSelect(flattenTree, focusedNodeKey, emits) {
             selectedKeys.clear();
             selectedKeys.add(item.path)
             clickedKeys.push(item.path)
+
+            emits('nodeClick', item);
         }
 
         emits('nodeSelect', selectedKeys);
