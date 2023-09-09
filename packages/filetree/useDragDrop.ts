@@ -1,17 +1,17 @@
 import {ref} from 'vue';
-import {Position} from "./types";
+import {Position, TreeNode} from "./types";
 import {dirname, findIndexByPath, findNodeByPath, findParentNodeByPath, join} from "./utils";
 
-export default function useDragDrop(emits) {
+export default function useDragDrop(expandedKeys: Set<string>, emits) {
 
     const hoverAboveKey = ref<string>("");
     const hoverInKey = ref<string>("");
     const hoverBelowKey = ref<string>("");
 
-    let drag: TreeNode = null;
+    let drag: TreeNode | null = null;
     let position = Position.IN;
 
-    function onDragStart(nodeData) {
+    function onDragStart(nodeData: TreeNode) {
         drag = nodeData;
     }
 
@@ -20,7 +20,7 @@ export default function useDragDrop(emits) {
     }
 
 
-    function onDragOver(e: DragEvent, nodeData) {
+    function onDragOver(e: DragEvent, nodeData: TreeNode) {
         // e.preventDefault();
 
         if (e.dataTransfer) {
@@ -97,7 +97,7 @@ export default function useDragDrop(emits) {
         clearHover();
     }
 
-    const onDrop = (drop: TreeNode, data) => {
+    const onDrop = (drop: TreeNode, data: TreeNode) => {
         clearHover();
 
         if (drop.path === drag.path) {
@@ -116,7 +116,7 @@ export default function useDragDrop(emits) {
         }
 
         // for an expanded folder, there is no below position
-        if (dropItem.type === "folder" && dropItem.expanded && position == Position.BELOW) {
+        if (dropItem.type === "folder" && expandedKeys.has(dropItem.path) && position == Position.BELOW) {
             return;
         }
 
