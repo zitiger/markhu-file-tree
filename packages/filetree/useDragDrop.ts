@@ -33,16 +33,22 @@ export default function useDragDrop(expandedKeys: Set<string>, emits) {
 
         position = calculateDropPosition(e, nodeData?.type);
 
-        clearHover();
+        // clearHover();
         if (position === Position.ABOVE) {
             hoverAboveKey.value = nodeData.path;
+            hoverBelowKey.value = '';
+            hoverInKey.value = '';
         } else if (position === Position.BELOW) {
             // when a folder is expanded, there is no below position
             if (nodeData.type == "file" || !nodeData.expanded) {
                 hoverBelowKey.value = nodeData.path;
+                hoverAboveKey.value = '';
+                hoverInKey.value = '';
             }
         } else {
             hoverInKey.value = nodeData.path;
+            hoverBelowKey.value = '';
+            hoverAboveKey.value = '';
         }
     }
 
